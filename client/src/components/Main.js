@@ -13,6 +13,7 @@ import TransactionsView from './View/TransactionsView';
 import ChaincodeView from './View/ChaincodeView';
 import DashboardView from './View/DashboardView';
 import ChannelsView from './View/ChannelsView';
+import HistoryView from './View/HistoryView';
 import { chartSelectors } from '../state/redux/charts';
 import { tableOperations, tableSelectors } from '../state/redux/tables';
 import {
@@ -122,6 +123,10 @@ export const Main = props => {
 		getTransactionListSearch
 	};
 
+	const historyViewProps = {
+		currentChannel
+	};
+
 	const [transactionId, setTransactionId] = useState('');
 
 	useEffect(() => {
@@ -193,6 +198,13 @@ export const Main = props => {
 								transactionId={transactionId}
 								removeTransactionId={removeTransactionId}
 							/>
+						)}
+					/>
+					<Private
+						exact
+						path="/history"
+						render={routeprops => (
+							<HistoryView {...{ ...historyViewProps, ...routeprops }} />
 						)}
 					/>
 					<Route exact render={routeprops => <PageNotFound {...routeprops} />} />
