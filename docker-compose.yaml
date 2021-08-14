@@ -3,13 +3,15 @@
 version: '2.1'
 
 volumes:
-  pgdata:
+  pgdata_explorer:
+  pgdata_refiner:
   walletstore:
 
 networks:
   mynetwork.com:
     external:
-      name: net_test
+      name: fabric_test
+  explorer-internal:
 
 services:
 
@@ -27,9 +29,9 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_explorer:/var/lib/postgresql/data
     networks:
-      - mynetwork.com
+      - explorer-internal
 
   explorer.mynetwork.com:
     image: hyperledger/explorer:latest
@@ -54,6 +56,41 @@ services:
       - 8080:8080
     depends_on:
       explorerdb.mynetwork.com:
+        condition: service_healthy
+    networks:
+      - mynetwork.com
+      - explorer-internal
+
+  refinerdb.mynetwork.com:
+    image: fujitsu/refinerdb:latest
+    container_name: refinerdb
+    hostname: refinerdb.mynetwork.com
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -q -U postgres"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - pgdata_refiner:/var/lib/postgresql/data
+    # ports:
+    #   - 5432:5432
+    networks:
+      - mynetwork.com
+
+  refiner.mynetwork.com:
+    image: fujitsu/refiner:latest
+    container_name: refiner
+    hostname: refiner.mynetwork.com
+    volumes:
+      - /home/atsushi/dev/hyperledger/Ledger-Data-Refiner/config/config.ini:/opt/config/config.ini
+      - /home/atsushi/dev/hyperledger/Ledger-Data-Refiner/config/connection-config-docker.yaml:/opt/config/connection-config.yaml
+      - /home/atsushi/dev/hyperledger/Ledger-Data-Refiner/log:/root/refiner/log
+      - /home/atsushi/dev/hyperledger/fabric-samples/test-network/organizations:/opt/organizations
+    command: sh -c "/opt/ledgerdata-refiner"
+    ports:
+      - 30052:30052
+    depends_on:
+      refinerdb.mynetwork.com:
         condition: service_healthy
     networks:
       - mynetwork.com
