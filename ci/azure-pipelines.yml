@@ -15,7 +15,7 @@ variables:
 jobs:
 - job: TestsWithCoverage
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
 
   - template: install_deps.yml
@@ -41,7 +41,7 @@ jobs:
 
 - job: SanityChecks_v1_4
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
   - template: install_deps.yml
   - checkout: self
@@ -52,7 +52,7 @@ jobs:
 
 - job: SanityChecks_v2_1
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
   - template: install_deps.yml
   - checkout: self
@@ -63,7 +63,7 @@ jobs:
 
 - job: GUITests_v1_4
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
   - template: install_deps.yml
   - checkout: self
@@ -74,7 +74,7 @@ jobs:
 
 - job: GUITests_v2_1
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
   - template: install_deps.yml
   - checkout: self
