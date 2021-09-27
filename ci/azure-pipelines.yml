@@ -10,7 +10,7 @@ variables:
   GOPATH: $(Agent.BuildDirectory)/go
   PATH: $(Agent.BuildDirectory)/go/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
   GO_VER: 1.17
-  NODE_VER: 12.13
+  NODE_VER: 10.19
 
 jobs:
 - job: TestsWithCoverage
